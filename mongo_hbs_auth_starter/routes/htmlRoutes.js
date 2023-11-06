@@ -20,4 +20,13 @@ router.get("/private", checkAuth, ({ session: { isLoggedIn } }, res) => {
   res.render("protected", { isLoggedIn });
 });
 
+/* ------------------- Quynh's code ---------------------- */
+ router.get("/", checkAuth, controllers.moodTracking);
+ router.get("/mood-entry/:id", checkAuth, controllers.findEntry);
+ router.get("/new-entry", checkAuth, controllers.newEntryForm);
+ router.post("/new-entry", checkAuth, controllers.newEntry);
+ router.get("/edit-entry/:id", checkAuth, controllers.editForm);
+ router.put("/edit-entry/:id", checkAuth, controllers.entryEdit);
+ router.delete("/delete-entry/:id", checkAuth, controllers.deleteEntry);
+/* ------------------- Quynh's code ---------------------- */
 module.exports = router;

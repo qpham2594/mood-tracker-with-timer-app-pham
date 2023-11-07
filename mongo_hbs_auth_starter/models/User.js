@@ -1,5 +1,4 @@
 const { Schema, model, models } = require("mongoose");
-const mongoose = require('mongoose'); // Import mongoose????
 const bcrypt = require("bcrypt");
 const MoodEntry = require('./moodEntry'); // Adjust the path to moodEntry.js
 
@@ -18,7 +17,7 @@ const UserSchema = new Schema(
     },
     moodEntries: [
       {
-        type: mongoose.Schema.Types.ObjectId, // another way to reference mongoose?
+        type: Schema.Types.ObjectId, // another way to reference mongoose?
         ref: 'MoodEntry', // Reference the MoodEntry model
       },
     ],

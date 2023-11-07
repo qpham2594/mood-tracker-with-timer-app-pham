@@ -18,15 +18,18 @@ router.get("/signup", async (req, res) => {
 
 router.get("/private", checkAuth, ({ session: { isLoggedIn } }, res) => {
   res.render("protected", { isLoggedIn });
-});
 
 /* ------------------- Quynh's code ---------------------- */
- router.get("/", checkAuth, controllers.moodTracking);
- router.get("/mood-entry/:id", checkAuth, controllers.findEntry);
- router.get("/new-entry", checkAuth, controllers.newEntryForm);
- router.post("/new-entry", checkAuth, controllers.newEntry);
- router.get("/edit-entry/:id", checkAuth, controllers.editForm);
- router.put("/edit-entry/:id", checkAuth, controllers.entryEdit);
- router.delete("/delete-entry/:id", checkAuth, controllers.deleteEntry);
-/* ------------------- Quynh's code ---------------------- */
+router.get("/", checkAuth, async (req,res) => controllers.moodTracking (req,res));
+router.get("/mood-entry/:id", checkAuth, async (req,res) => controllers.findEntry (req,res));
+router.get("/new-entry", checkAuth, async (req,res) =>controllers.newEntryForm (req,res));
+router.post("/new-entry", checkAuth, async (req,res) => controllers.newEntry (req,res));
+router.get("/edit-entry/:id", checkAuth, async (req,res) => controllers.editForm (req,res)) ;
+router.post("/edit-entry/:id", checkAuth, async (req,res) => controllers.entryEdit (req,res));
+router.delete("/delete-entry/:id", checkAuth, async (req,res) => controllers.deleteEntry (req,res));
+/* ------------------- Quynh's code ---------------------- */ 
+
+});
+
+
 module.exports = router;

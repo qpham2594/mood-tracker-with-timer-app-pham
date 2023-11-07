@@ -20,12 +20,12 @@ async function create(req, res) {
 }
 /* ------------------- Quynh's code ---------------------- */
 
-const {newEntry} = require("..models/moodEntry");
+const MoodEntry = require("../models/moodEntry.js");
 
 // showing all entries
 const moodTracking = async (req,res) => {
   try {
-    const moodEntries = await newEntry.find({userId: req.user.id});
+    const moodEntries = await MoodEntry.find({userId: req.user.id});
     res.render('moodEntries', {moodEntries})
   } catch (error) {
   console.error(error);
@@ -37,7 +37,7 @@ const moodTracking = async (req,res) => {
 
 const findEntry = async (req,res) => {
   try {
-    const entryId = await entries.findById(req.params.id);
+    const entryId = await MoodEntry.findById(req.params.id);
     res.render('findEntry', {entryId})
   } catch (error)
   { console.error(error);
@@ -55,7 +55,7 @@ const newEntryForm = async (req,res) => {
 
 const createNewEntry = async (req,res) => {
   try {
-    const addingEntry = new entries({
+    const addingEntry = new MoodEntry({
       userId: req.user.id,
       mood: req.body.mood,
       description: req.body.description
@@ -74,7 +74,7 @@ const createNewEntry = async (req,res) => {
 
 const editForm = async (req,res) => {
   try {
-  const moodEditForm = await entries.findById(req.params.id);
+  const moodEditForm = await MoodEntry.findById(req.params.id);
   res.render('entryEdit', {moodEditForm});
 } catch (error) {
   console.error(error);
@@ -86,7 +86,7 @@ const editForm = async (req,res) => {
 
 const entryEdit = async (req,res) => {
   try {
-    const currentEntry = await entries.findById(req.params.id);
+    const currentEntry = await MoodEntry.findById(req.params.id);
     currentEntry.userId = req.user.id;
     await currentEntry.save()
     res.redirect('/');
@@ -100,7 +100,7 @@ const entryEdit = async (req,res) => {
 
 const deleteEntry = async (req,res) => {
   try {
-    await entries.findByIdAndRemove(req.params.id);
+    await MoodEntry.findByIdAndRemove(req.params.id);
     res.redirect('/');
   } catch (error) {
     console.error(error);

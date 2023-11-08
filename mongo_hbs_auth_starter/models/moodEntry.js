@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 
 const moodEntrySchema = new mongoose.Schema({
-
+  date: {
+    type: Date,
+    required: true,
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', 
@@ -17,6 +20,6 @@ const moodEntrySchema = new mongoose.Schema({
   },
 });
 
-const newEntry = mongoose.model('newEntry', moodEntrySchema);
+const entry = mongoose.model('MoodEntry', moodEntrySchema);
 
-module.exports = newEntry;
+module.exports = entry;

@@ -22,17 +22,17 @@ router.get("/private", checkAuth, ({ session: { isLoggedIn } }, res) => {
 
 /* ------------------- Quynh's code ---------------------- */
 router.get('/mood-entries', async (req, res) => {
-  const singleQuote = await controllers.fetchZenQuotes();
+  const singleQuote = await controllers.user.dailyQuote();
   res.render('index', { zenQuotes });
 });
 
-router.get("/mood-app", checkAuth, async (req,res) => controllers.moodTracking (req,res));
-router.get("/mood-entry/:id", checkAuth, async (req,res) => controllers.findEntry (req,res));
-router.get("/new-entry", checkAuth, async (req,res) =>controllers.newEntryForm (req,res));
-router.post("/new-entry", checkAuth, async (req,res) => controllers.newEntry (req,res));
-router.get("/edit-entry/:id", checkAuth, async (req,res) => controllers.editForm (req,res)) ;
-router.post("/edit-entry/:id", checkAuth, async (req,res) => controllers.entryEdit (req,res));
-router.delete("/delete-entry/:id", checkAuth, async (req,res) => controllers.deleteEntry (req,res));
+router.get("/mood-app", checkAuth, async (req,res) => controllers.user.moodTracking (req,res));
+router.get("/mood-entry/:id", checkAuth, async (req,res) => controllers.user.findEntry (req,res));
+router.get("/new-entry", checkAuth, async (req,res) => controllers.user.newEntryForm (req,res));
+router.post("/new-entry", checkAuth, async (req,res) => controllers.user.newEntry (req,res));
+router.get("/edit-entry/:id", checkAuth, async (req,res) => controllers.user.editForm (req,res)) ;
+router.post("/edit-entry/:id", checkAuth, async (req,res) => controllers.user.entryEdit (req,res));
+router.delete("/delete-entry/:id", checkAuth, async (req,res) => controllers.user.deleteEntry (req,res));
 /* ------------------- Quynh's code ---------------------- */ 
 
 });

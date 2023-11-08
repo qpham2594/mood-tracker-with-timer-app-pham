@@ -22,7 +22,7 @@ async function create(req, res) {
 }
 /* ------------------- Quynh's code ---------------------- */
 
-const dailyQuote = async() => {
+const dailyQuote = async function get() {
   try {
     const zenQuote = await axios.get('https://zenquotes.io/api/today/jVfM1SXcyTJ3P7mG6cBzVQ==0xadIKmDngYPuzcz');
     return zenQuote.data;
@@ -32,10 +32,10 @@ const dailyQuote = async() => {
   }
 }
 
-const MoodEntry = require("../models/moodEntry.js");
+const MoodEntry = require("../models/moodEntry");
 
 // showing all entries
-const moodTracking = async (req,res) => {
+const moodTracking = async function get (req,res) {
   try {
     const moodEntries = await MoodEntry.find({userId: req.user.id});
     res.render('index', {moodEntries})
@@ -47,7 +47,7 @@ const moodTracking = async (req,res) => {
 
 // finding and showing one entry
 
-const findEntry = async (req,res) => {
+const findEntry = async function get (req,res) {
   try {
     const entryId = await MoodEntry.findById(req.params.id);
     res.render('findEntry', {entryId})
@@ -59,22 +59,23 @@ const findEntry = async (req,res) => {
 
 // form for new entry
 
-const newEntryForm = async (req,res) => {
+const newEntryForm = async function get (req,res) {
   res.render('newEntryForm')
 };
 
 // adding new entry
 
-const createNewEntry = async (req,res) => {
+const createNewEntry = async function post (req,res) {
   try {
     const addingEntry = new MoodEntry({
+      date: req.body.date,
       userId: req.user.id,
       mood: req.body.mood,
       description: req.body.description
     });
 
   await addingEntry.save();
-  res.redirect('/new-entry');
+  res.redirect('/mood-app');
 
 }catch (error) {
   console.error(error);
@@ -84,7 +85,7 @@ const createNewEntry = async (req,res) => {
 
 // edit form
 
-const editForm = async (req,res) => {
+const editForm = async function get (req,res) {
   try {
   const moodEditForm = await MoodEntry.findById(req.params.id);
   res.render('entryEdit', {moodEditForm});
@@ -96,12 +97,12 @@ const editForm = async (req,res) => {
 
 // edit entry
 
-const entryEdit = async (req,res) => {
+const entryEdit = async function post (req,res) {
   try {
     const currentEntry = await MoodEntry.findById(req.params.id);
     currentEntry.userId = req.user.id;
     await currentEntry.save()
-    res.redirect('/');
+    res.redirect('/mood-app');
   } catch(error) {
     console.error(error);
     res.status(500).send('Internal Server Error')
@@ -113,7 +114,7 @@ const entryEdit = async (req,res) => {
 const deleteEntry = async (req,res) => {
   try {
     await MoodEntry.findByIdAndRemove(req.params.id);
-    res.redirect('/');
+    res.redirect('/mood-app');
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');

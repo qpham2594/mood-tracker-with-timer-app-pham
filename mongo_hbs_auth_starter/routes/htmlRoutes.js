@@ -2,6 +2,7 @@ const router = require("express").Router();
 const controllers = require("../controllers");
 const checkAuth = require("../middleware/auth");
 
+
 router.get("/", ({ session: { isLoggedIn } }, res) => {
   res.render("index", { isLoggedIn });
 });
@@ -20,7 +21,12 @@ router.get("/private", checkAuth, ({ session: { isLoggedIn } }, res) => {
   res.render("protected", { isLoggedIn });
 
 /* ------------------- Quynh's code ---------------------- */
-router.get("/", checkAuth, async (req,res) => controllers.moodTracking (req,res));
+router.get('/mood-entries', async (req, res) => {
+  const singleQuote = await controllers.fetchZenQuotes();
+  res.render('index', { zenQuotes });
+});
+
+router.get("/mood-app", checkAuth, async (req,res) => controllers.moodTracking (req,res));
 router.get("/mood-entry/:id", checkAuth, async (req,res) => controllers.findEntry (req,res));
 router.get("/new-entry", checkAuth, async (req,res) =>controllers.newEntryForm (req,res));
 router.post("/new-entry", checkAuth, async (req,res) => controllers.newEntry (req,res));

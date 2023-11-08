@@ -1,4 +1,6 @@
 const { User } = require("../models");
+const axios = require('axios');
+
 
 async function create(req, res) {
   try {
@@ -20,13 +22,23 @@ async function create(req, res) {
 }
 /* ------------------- Quynh's code ---------------------- */
 
+const dailyQuote = async() => {
+  try {
+    const zenQuote = await axios.get('https://zenquotes.io/api/today/jVfM1SXcyTJ3P7mG6cBzVQ==0xadIKmDngYPuzcz');
+    return zenQuote.data;
+  }catch(error){
+    console.error('Unable to get daily quote due to error', error);
+    return[];
+  }
+}
+
 const MoodEntry = require("../models/moodEntry.js");
 
 // showing all entries
 const moodTracking = async (req,res) => {
   try {
     const moodEntries = await MoodEntry.find({userId: req.user.id});
-    res.render('moodEntries', {moodEntries})
+    res.render('index', {moodEntries})
   } catch (error) {
   console.error(error);
   res.status(500).send('Internal Server Error');
@@ -48,7 +60,7 @@ const findEntry = async (req,res) => {
 // form for new entry
 
 const newEntryForm = async (req,res) => {
-  res.render('newEntry')
+  res.render('newEntryForm')
 };
 
 // adding new entry
@@ -62,7 +74,7 @@ const createNewEntry = async (req,res) => {
     });
 
   await addingEntry.save();
-  res.redirect('/');
+  res.redirect('/new-entry');
 
 }catch (error) {
   console.error(error);
@@ -110,6 +122,7 @@ const deleteEntry = async (req,res) => {
 
 module.exports = {
   create,
+  dailyQuote,
   moodTracking,
   findEntry,
   newEntryForm,

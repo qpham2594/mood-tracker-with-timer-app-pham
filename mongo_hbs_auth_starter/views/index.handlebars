@@ -1,7 +1,27 @@
 {{> header}}
 <main>
-  <h1>This is the home page!</h1>
-  <p>Currently, you are {{#unless isLoggedIn}} NOT {{/unless}} logged in.</p>
-  <p>You should {{#unless isLoggedIn}}NOT{{/unless}} be able to access <a href="/private">this page</a>.</p>
-  <p>Use the header above to {{#if isLoggedIn}} logout{{else}} login or create an account{{/if}}.</p>
+ <h1> Welcome to your personalized mood tracker! </h1>
+
+ <h2> {{singleQuote}} </h2>
+
+ <ul>
+  {{#each moodEntries}}
+  <li>
+    <h3> {{mood}} </h3>
+    <p> {{description}} </p>
+  </li>
+  {{/each}}
+ </ul>
+
+ <button>
+  <a href="/new-entry"> Add new entry </a> 
+ </button>
+
+  <button>
+   <a href="/mood-entry/:id"> Find an entry </a> 
+ </button>
+
+  <button>
+   <a href="/edit-entry/:id"> Edit an entry </a> 
+ </button>
 </main>

@@ -1,7 +1,14 @@
 <header>
   <a class="site-logo" href="/">
-    Auth Example! 🕵️
+    Mood Tracker
   </a>
+
+  <div class="topnav">
+    <a class="active" href="#homepage"> Home </a>
+    <a href="#about"> About </a>
+    <a href="#timer"> Timer </a>
+  </div>
+
   {{#if isLoggedIn}}
     <a href="/api/logout">Logout</a>
   {{else}}

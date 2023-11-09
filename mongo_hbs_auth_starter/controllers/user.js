@@ -69,15 +69,16 @@ const newEntryForm = async function get (req,res) {
 
 const createNewEntry = async function post (req,res) {
   try {
+    console.log(req.user); 
     const addingEntry = new entry({
-      date: req.body.date,
       userId: req.user.id,
+      date: req.body.date,
       mood: req.body.mood,
-      description: req.body.description
+      description: req.body.description,
     });
 
   await addingEntry.save();
-  res.redirect('/mood-app');
+  res.render('newEntry', {addingEntry});
 
 }catch (error) {
   console.error(error);
@@ -95,7 +96,7 @@ const editForm = async function get (req,res) {
   console.error(error);
   res.status(500).send('Internal Server Error')
 }
-}
+};
 
 // edit entry
 
@@ -109,7 +110,7 @@ const entryEdit = async function post (req,res) {
     console.error(error);
     res.status(500).send('Internal Server Error')
   }
-}
+};
 
 // delete entry
 
@@ -121,7 +122,7 @@ const deleteEntry = async (req,res) => {
     console.error(error);
     res.status(500).send('Internal Server Error');
   }
-}
+};
 
 module.exports = {
   create,

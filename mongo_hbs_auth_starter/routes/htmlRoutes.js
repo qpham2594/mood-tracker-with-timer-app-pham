@@ -21,6 +21,8 @@ router.get("/signup", async (req, res) => {
 router.get("/private", checkAuth, ({ session: { isLoggedIn } }, res) => {
   res.render("protected", { isLoggedIn });
 
+});
+
 /* ------------------- Quynh's code ---------------------- */
 
 // trying to figure out the issue here
@@ -42,13 +44,14 @@ router.get("/mood-app", async (req, res) => {
 
 router.get("/mood-entry/:id", checkAuth, async (req,res) => controllers.user.findEntry (req,res));
 router.get("/new-entry", checkAuth, async (req,res) => controllers.user.newEntryForm (req,res));
-router.post("/new-entry", checkAuth, async (req,res) => controllers.user.newEntry (req,res));
+router.post("/new-entry-post", checkAuth, async (req,res) => controllers.user.createNewEntry (req,res));
 router.get("/edit-entry/:id", checkAuth, async (req,res) => controllers.user.editForm (req,res)) ;
 router.post("/edit-entry/:id", checkAuth, async (req,res) => controllers.user.entryEdit (req,res));
 router.delete("/delete-entry/:id", checkAuth, async (req,res) => controllers.user.deleteEntry (req,res));
+
 /* ------------------- Quynh's code ---------------------- */ 
 
-});
+
 
 
 module.exports = router;

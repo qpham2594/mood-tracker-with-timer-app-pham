@@ -3,17 +3,23 @@
 <main>
     <h1> How are you feeling today? </h1>
 
-    <form action="/new-entry" method="POST">
-    <label for="date"> Date: </label>
-    <input type="date" id="date" name="date">
-    <label for="mood"> Today's Mood: </label>
-    <input type="text" id="mood" name="mood" required>
+    <form action="/new-entry-post" method="POST">
+    <div>
+        <label for="date"> Date: </label>
+        <input type="date" id="date" name="date">
+    </div>
+    <div>
+         <label for="mood"> Today's Mood: </label>
+        <input type="text" id="mood" name="mood" required>
+    </div>
+    <div>
+         <label for="description"> Tell me about it: </label>
+        <textarea id="description" name="description" rows="5" required></textarea>
+    </div>
 
-    <label for="description"> Tell me about it: </label>
-    <textarea id="description" name="description" rows="5" required></textarea>
-
-    <button type="submit"> Add Entry </button>
-
+    <div>
+        <button type="submit"> Add Entry </button>
+    </div>
     </form>
 
 </main>

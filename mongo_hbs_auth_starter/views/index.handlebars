@@ -1,28 +1,12 @@
 {{> header}}
 <main>
- <h1> Welcome to your personalized mood tracker! </h1>
-
-
- <h2> {{singleQuote}} </h2>
-
- <ul>
-  {{#each moodEntries}}
-  <li>
-    <h3> {{mood}} </h3>
-    <p> {{description}} </p>
-  </li>
-  {{/each}}
- </ul>
-
- <button>
-  <a href="/new-entry"> Add new entry </a> 
- </button>
+  <h1>This is a private page!</h1>
+  <p>You should only be able to see this page if logged in.</p>
+  <p>Currently, you are {{#unless isLoggedIn}} NOT {{/unless}} logged in.</p>
+  <p>Use the header above to {{#if isLoggedIn}} logout{{else}} login or create an account{{/if}}.</p>
 
   <button>
-   <a href="/mood-entry/{{_id}}"> Find an entry </a> 
+  <a href="/mood-app"> Go to Mood Tracking </a> 
  </button>
 
-  <button>
-   <a href="/edit-entry/{{_id}}"> Edit an entry </a> 
- </button>
 </main>

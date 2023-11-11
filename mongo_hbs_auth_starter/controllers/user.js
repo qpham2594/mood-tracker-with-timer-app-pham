@@ -28,6 +28,7 @@ async function create(req, res) {
 const dailyQuote = async function get() {
   try {
     const zenQuote = await axios.get('https://zenquotes.io/api/today/jVfM1SXcyTJ3P7mG6cBzVQ==0xadIKmDngYPuzcz');
+    console.log(zenQuote.data);
     return zenQuote.data;
   }catch(error){
     console.error('Unable to get daily quote due to error', error);
@@ -37,15 +38,16 @@ const dailyQuote = async function get() {
 
 
 // showing all entries
-const moodTracking = async function get (req,res) {
+const moodTracking = async (req,res) => {
   try {
-    const moodEntries = await entry.find({userId: req.user.id});
-    res.render('index', {moodEntries})
+    const moodEntries = await entry(req,res);
+    res.render('moodTracking', {moodEntries})
   } catch (error) {
   console.error(error);
   res.status(500).send('Internal Server Error');
   }
 };
+
 
 // finding and showing one entry
 
@@ -67,9 +69,8 @@ const newEntryForm = async function get (req,res) {
 
 // adding new entry
 
-const createNewEntry = async function post (req,res) {
+const createNewEntry = async function post(req, res) {
   try {
-    console.log(req.user); 
     const addingEntry = new entry({
       userId: req.user.id,
       date: req.body.date,
@@ -77,13 +78,12 @@ const createNewEntry = async function post (req,res) {
       description: req.body.description,
     });
 
-  await addingEntry.save();
-  res.render('newEntry', {addingEntry});
-
-}catch (error) {
-  console.error(error);
-  res.status(500).send('Internal Server Error')
-}
+    await addingEntry.save();
+    res.render('newEntry', { addingEntry });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
 };
 
 // edit form

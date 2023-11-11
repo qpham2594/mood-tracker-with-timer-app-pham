@@ -17,8 +17,8 @@ const UserSchema = new Schema(
     },
     moodEntries: [
       {
-        type: Schema.Types.ObjectId, // another way to reference mongoose?
-        ref: 'MoodEntry', // Reference the MoodEntry model
+        type: Schema.Types.ObjectId, 
+        ref: 'MoodEntry', 
       },
     ],
   },

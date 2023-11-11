@@ -1,6 +1,7 @@
 const { User } = require("../models");
 const axios = require('axios');
-const entry = require ('../models/moodEntry')
+const entry = require ('../models/moodEntry');
+const cheerio = require('cheerio');
 
 
 async function create(req, res) {
@@ -28,8 +29,10 @@ async function create(req, res) {
 const dailyQuote = async function get() {
   try {
     const zenQuote = await axios.get('https://zenquotes.io/api/today/jVfM1SXcyTJ3P7mG6cBzVQ==0xadIKmDngYPuzcz');
-    console.log(zenQuote.data);
-    return zenQuote.data;
+    const quote = zenQuote.data[0].h;
+    const blockQuote = cheerio.load(quote);
+    const text = blockQuote('blockquote').text();
+    return text;
   }catch(error){
     console.error('Unable to get daily quote due to error', error);
     return[];
@@ -71,6 +74,12 @@ const newEntryForm = async function get (req,res) {
 
 const createNewEntry = async function post(req, res) {
   try {
+
+      // Checking to see if the userId is saved here
+      if (!req.session.isLoggedIn || !req.user || !req.user.id) {
+        return res.status(400).send("Unauthorized");
+      }
+
     const addingEntry = new entry({
       userId: req.user.id,
       date: req.body.date,

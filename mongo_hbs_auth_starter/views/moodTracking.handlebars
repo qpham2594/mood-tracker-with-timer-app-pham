@@ -4,12 +4,6 @@
 
 <h2> {{singleQuote}}</h2>
 
-  <form action="/mood-app" method="GET">
-    <label for="date">Filter by Date:</label>
-    <input type="date" id="date" name="date" value="{{selectedDate}}">
-    <button type="submit">Filter</button>
-  </form>
-
   {{#each moodEntries}}
     <h2>{{this.date}}</h2>
     <p>{{this.mood}}</p>
@@ -17,14 +11,10 @@
   {{/each}}
 
  <button>
-  <a href="/new-entry"> Add new entry </a> 
+  <a href="/new-entry-form"> Add new entry </a> 
  </button>
 
   <button>
-   <a href="/mood-entry/{{_id}}"> Find an entry </a> 
- </button>
-
-  <button>
-   <a href="/edit-entry/{{_id}}"> Edit an entry </a> 
+   <a href="/edit-entry/{{userid}}"> Edit an entry </a> 
  </button>
 </main>

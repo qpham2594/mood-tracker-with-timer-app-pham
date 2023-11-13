@@ -11,7 +11,7 @@ async function create(req, res) {
     if (!username || !password)
       return res.redirect("/signup?error=must include username and password");
 
-    const user = await User.create({ username, password });
+    const user = await User.create({ username, password }); // user is what will be used to get to id
 
     if (!user) return res.redirect("/signup?error=error creating new user");
 
@@ -24,6 +24,7 @@ async function create(req, res) {
 }
 
 /* ------------------- Quynh's code ---------------------- */
+// for MongoDB, the default identifier is _id
 
 // daily quote - link is working
 const dailyQuote = async function get() {
@@ -41,7 +42,7 @@ const dailyQuote = async function get() {
 
 
 // showing all entries
-const moodTracking = async (req,res) => {
+const moodTracking = async function get (req,res) {
   try {
     const moodEntries = await entry(req,res);
     res.render('moodTracking', {moodEntries})
@@ -51,43 +52,35 @@ const moodTracking = async (req,res) => {
   }
 };
 
-
-// finding and showing one entry
-
-const findEntry = async function get (req,res) {
-  try {
-    const entryId = await entry.findById(req.params.id);
-    res.render('findEntry', {entryId})
-  } catch (error)
-  { console.error(error);
-  res.status(500).send('Internal Server Error')
-  }
-};
-
 // form for new entry
 
-const newEntryForm = async function get (req,res) {
-  res.render('newEntryForm')
+const newEntryForm = function get(req, res) {
+  console.log("Before rendering the form:", req.session.isLoggedIn);
+  
+  res.render('newEntryForm', (err, html) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Internal Server Error.");
+    } else {
+      console.log("After rendering the form:", req.session.isLoggedIn);
+    }
+  });
 };
 
 // adding new entry
 
 const createNewEntry = async function post(req, res) {
+
   try {
-
-      // Checking to see if the userId is saved here
-      if (!req.session.isLoggedIn || !req.user || !req.user.id) {
-        return res.status(400).send("Unauthorized");
-      }
-
     const addingEntry = new entry({
-      userId: req.user.id,
+      user: req.body.ObjectId,
       date: req.body.date,
       mood: req.body.mood,
       description: req.body.description,
     });
-
+    
     await addingEntry.save();
+
     res.render('newEntry', { addingEntry });
   } catch (error) {
     console.error(error);
@@ -112,7 +105,7 @@ const editForm = async function get (req,res) {
 const entryEdit = async function post (req,res) {
   try {
     const currentEntry = await entry.findById(req.params.id);
-    currentEntry.userId = req.user.id;
+   // currentEntry.userid = req.userid;
     await currentEntry.save()
     res.redirect('/mood-app');
   } catch(error) {
@@ -133,11 +126,11 @@ const deleteEntry = async (req,res) => {
   }
 };
 
+
 module.exports = {
   create,
   dailyQuote,
   moodTracking,
-  findEntry,
   newEntryForm,
   createNewEntry,
   editForm,

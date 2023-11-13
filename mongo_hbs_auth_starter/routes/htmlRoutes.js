@@ -5,6 +5,7 @@ const cheerio = require('cheerio');
 
 
 
+
 router.get("/", ({ session: { isLoggedIn } }, res) => {
   res.render("index", { isLoggedIn });
 });
@@ -43,11 +44,11 @@ router.get("/mood-app", checkAuth, async(req,res) => {
 // Mood Tracker Homepage
 router.get("/mood-app", checkAuth, async (req, res) => {
   try {
-    const { date } = req.query;
+    //const { date } = req.query;
     const moodEntries = await controllers.user.moodTracking(req, res);
 
     if (req.session.isLoggedIn) {
-      res.render("moodTracking", { isLoggedIn: req.session.isLoggedIn, moodEntries, selectedDate: date });
+      res.render("moodTracking", { isLoggedIn: req.session.isLoggedIn, moodEntries});
       return;
     }
   } catch (error) {
@@ -56,34 +57,16 @@ router.get("/mood-app", checkAuth, async (req, res) => {
   }
 });
 
-
-// Finding an entry 
-router.get("/mood-entry/:id", checkAuth, async (req,res) => {
-    try {
-      await controllers.user.findEntry (req,res);
-
-      if (req.session.isLoggedIn) {
-        res.render("findEntry", {isLoggedIn: req.session.isLoggedIn});
-        return; 
-      }
-
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Internal Server Error.");
-    }
-  }
-);
-
 // New Entry Form 
-router.get("/new-entry", checkAuth, async (req,res) => {
+router.get("/new-entry-form", checkAuth, async (req,res) => {
   try {
+    console.log(req.session);
     await controllers.user.newEntryForm (req,res);
 
     if (req.session.isLoggedIn) {
       res.render("newEntryForm", {isLoggedIn: req.session.isLoggedIn});
       return; 
     }
-
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error.");
@@ -95,12 +78,15 @@ router.get("/new-entry", checkAuth, async (req,res) => {
 router.post("/new-entry-post", checkAuth, async (req,res) => {
   try {
     await controllers.user.createNewEntry (req,res);
+    console.log("Before trying to post", req.session.isLoggedIn);
+  
 
     if (req.session.isLoggedIn) {
       res.render("newEntry", {isLoggedIn: req.session.isLoggedIn});
       return; 
     }
   } catch (error) {
+    console.log("After trying to post", req.session.isLoggedIn);
     console.error(error);
     res.status(500).send("Internal Server Error.");
   }

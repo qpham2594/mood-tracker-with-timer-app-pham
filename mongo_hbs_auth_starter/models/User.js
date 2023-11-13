@@ -28,8 +28,9 @@ const UserSchema = new Schema(
         return bcrypt.compare(password, this.password);
       },
     },
-  }
+  },
 );
+
 
 // hashes the password before it's stored in mongo
 UserSchema.pre("save", async function (next) {
@@ -40,5 +41,6 @@ UserSchema.pre("save", async function (next) {
 });
 
 module.exports = models.User || model("User", UserSchema);
+
 
 

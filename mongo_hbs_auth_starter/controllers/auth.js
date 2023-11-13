@@ -7,7 +7,8 @@ async function login(req, res) {
     if (!username || !password)
       return res.redirect("/login?error=must include username and password");
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username }); 
+    console.log(user);
 
     if (!user)
       return res.redirect("/login?error=username or password is incorrect");
@@ -17,6 +18,9 @@ async function login(req, res) {
     if (!passwordMatches)
       return res.redirect("/login?error=username or password is incorrect");
 
+//added for tracker app
+  // req.session.userId = user.username;
+    
     req.session.isLoggedIn = true;
     req.session.save(() => res.redirect("/"));
   } catch (err) {

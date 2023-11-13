@@ -1,5 +1,7 @@
 const { Schema, model, models } = require("mongoose");
 
+
+
 const moodEntrySchema = new Schema({
 
   date: {
@@ -12,16 +14,18 @@ const moodEntrySchema = new Schema({
     ref: 'User', 
     required: true,
   },
+
   mood: {
     type: String,
     required: true,
   },
+  
   description: {
     type: String,
     required: true,
   },
 });
 
-const entry = model('moodTracking', moodEntrySchema);
+module.exports = models.moodEntry || model("MoodEntry", moodEntrySchema);
 
-module.exports = entry;
+

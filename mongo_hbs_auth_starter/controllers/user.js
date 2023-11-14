@@ -25,7 +25,6 @@ async function create(req, res) {
 }
 
 /* ------------------- Quynh's code ---------------------- */
-// for MongoDB, the default identifier is _id
 
 // daily quote - link is working
 const dailyQuote = async function get() {

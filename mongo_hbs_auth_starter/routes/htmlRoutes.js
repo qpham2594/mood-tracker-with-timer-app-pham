@@ -3,7 +3,6 @@ const controllers = require("../controllers");
 const checkAuth = require("../middleware/auth");
 
 
-
 router.get("/", ({ session: { isLoggedIn } }, res) => {
   res.render("index", { isLoggedIn });
 });
@@ -58,8 +57,8 @@ router.get("/new-entry-form", checkAuth, async ({ session: { isLoggedIn } }, res
   try {
     if (isLoggedIn) {
       console.log("Routes/html.js: Before rendering the form:", isLoggedIn);
-      await controllers.user.newEntryForm({ session: { isLoggedIn } }, res);
-      res.render("newEntryForm", { isLoggedIn });
+      const newForm = await controllers.user.newEntryForm({ session: { isLoggedIn } }, res);
+      res.render("newEntryForm", { isLoggedIn, newForm });
       return;
     }
   } catch (error) {
@@ -70,10 +69,11 @@ router.get("/new-entry-form", checkAuth, async ({ session: { isLoggedIn } }, res
 });
 
 // New Entry Post
-router.post("/new-entry-post", checkAuth, async ({ session: { isLoggedIn } }, res) => {
+router.post("/new-entry-post", checkAuth, async ({ session: { isLoggedIn }, body }, res) => {
   try {
     if (isLoggedIn) {
-      await controllers.user.createNewEntry({ session: { isLoggedIn } }, res);
+      // Because of isLoggedIn implemented in checkAuth, we have access directly to body
+      await controllers.user.createNewEntry({ session: { isLoggedIn }, body }, res);
       res.render("newEntry", { isLoggedIn });
       return;
     }
@@ -86,9 +86,9 @@ router.post("/new-entry-post", checkAuth, async ({ session: { isLoggedIn } }, re
 // Edit Entry Form
 router.get("/edit-entry/:id", checkAuth, async ({ session: { isLoggedIn } }, res) => {
   try {
-    await controllers.user.editForm({ session: { isLoggedIn } }, res);
+    const formEdit = await controllers.user.editForm({ session: { isLoggedIn } }, res);
     if (isLoggedIn) {
-      res.render("editForm", { isLoggedIn });
+      res.render("editForm", { isLoggedIn, formEdit });
       return;
     }
   } catch (error) {
@@ -101,9 +101,9 @@ router.get("/edit-entry/:id", checkAuth, async ({ session: { isLoggedIn } }, res
 
 router.post("/edit-entry/:id", checkAuth, async ({ session: { isLoggedIn } }, res) => {
   try {
-    await controllers.user.entryEdit({ session: { isLoggedIn } }, res);
+    const edittedPost = await controllers.user.entryEdit({ session: { isLoggedIn } }, res);
     if (isLoggedIn) {
-      res.render("entryEdit", { isLoggedIn });
+      res.render("entryEdit", { isLoggedIn, edittedPost });
       return;
     }
   } catch (error) {
@@ -116,9 +116,9 @@ router.post("/edit-entry/:id", checkAuth, async ({ session: { isLoggedIn } }, re
 // Delete Entry
 router.delete("/delete-entry/:id", checkAuth, async ({ session: { isLoggedIn } }, res) => {
   try {
-    await controllers.user.deleteEntry({ session: { isLoggedIn } }, res);
+    const removePost = await controllers.user.deleteEntry({ session: { isLoggedIn } }, res);
     if (isLoggedIn) {
-      res.redirect("/mood-app");
+      res.render("mood-app", { isLoggedIn, removePost });
       return;
     }
   } catch (error) {
@@ -128,8 +128,5 @@ router.delete("/delete-entry/:id", checkAuth, async ({ session: { isLoggedIn } }
 });
 
 /* ------------------- Quynh's code ---------------------- */ 
-
-
-
 
 module.exports = router;

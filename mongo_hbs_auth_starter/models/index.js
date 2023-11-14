@@ -1,6 +1,6 @@
 const User = require("./User");
-const entry = require("./moodEntry")
+const moodEntry = require("./moodEntry")
 
 
-module.exports = { User, entry};
+module.exports = { User, moodEntry};
 

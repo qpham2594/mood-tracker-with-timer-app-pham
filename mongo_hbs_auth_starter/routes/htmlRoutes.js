@@ -1,8 +1,6 @@
 const router = require("express").Router();
 const controllers = require("../controllers");
 const checkAuth = require("../middleware/auth");
-const cheerio = require('cheerio');
-
 
 
 
@@ -28,27 +26,25 @@ router.get("/private", checkAuth, ({ session: { isLoggedIn } }, res) => {
 /* ------------------- Quynh's code ---------------------- */
 
 // Mood Tracker Daily Quote
-router.get("/mood-app", checkAuth, async(req,res) => {
+router.get("/mood-app", checkAuth, async ({ session: { isLoggedIn } }, res) => {
   try {
-    const singleQuote = await controllers.user.dailyQuote();
-    if (req.session.isLoggedIn) {
-      res.render("moodTracking", { isLoggedIn: req.session.isLoggedIn, singleQuote});
+    if (isLoggedIn) {
+      const singleQuote = await controllers.user.dailyQuote();
+      res.render("moodTracking", { isLoggedIn, singleQuote });
       return;
     }
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
-})
+});
 
 // Mood Tracker Homepage
-router.get("/mood-app", checkAuth, async (req, res) => {
+router.get("/mood-app", checkAuth, async ({ session: { isLoggedIn } }, res) => {
   try {
-    //const { date } = req.query;
-    const moodEntries = await controllers.user.moodTracking(req, res);
-
-    if (req.session.isLoggedIn) {
-      res.render("moodTracking", { isLoggedIn: req.session.isLoggedIn, moodEntries});
+    if (isLoggedIn) {
+      const moodEntries = await controllers.user.moodTracking(req, res);
+      res.render("moodTracking", { isLoggedIn, moodEntries });
       return;
     }
   } catch (error) {
@@ -58,91 +54,78 @@ router.get("/mood-app", checkAuth, async (req, res) => {
 });
 
 // New Entry Form 
-router.get("/new-entry-form", checkAuth, async (req,res) => {
+router.get("/new-entry-form", checkAuth, async ({ session: { isLoggedIn } }, res) => {
   try {
-    await controllers.user.newEntryForm (req,res);
-
-    if (req.session.isLoggedIn) {
-      res.render("newEntryForm", {isLoggedIn: req.session.isLoggedIn});
-      return; 
+    if (isLoggedIn) {
+      console.log("Routes/html.js: Before rendering the form:", isLoggedIn);
+      await controllers.user.newEntryForm({ session: { isLoggedIn } }, res);
+      res.render("newEntryForm", { isLoggedIn });
+      return;
     }
   } catch (error) {
+    console.error("Routes/htmlRoutes.js: After rendering the form:", isLoggedIn);
     console.error(error);
     res.status(500).send("Internal Server Error.");
   }
-}
-);
+});
 
 // New Entry Post
-router.post("/new-entry-post", checkAuth, async (req,res) => {
+router.post("/new-entry-post", checkAuth, async ({ session: { isLoggedIn } }, res) => {
   try {
-    await controllers.user.createNewEntry (req,res);
-    console.log("Before trying to post", req.session.isLoggedIn);
-  
-    if (req.session.isLoggedIn) {
-      res.render("newEntry", {isLoggedIn: req.session.isLoggedIn});
-      return; 
+    if (isLoggedIn) {
+      await controllers.user.createNewEntry({ session: { isLoggedIn } }, res);
+      res.render("newEntry", { isLoggedIn });
+      return;
     }
   } catch (error) {
-    console.log("After trying to post", req.session.isLoggedIn);
     console.error(error);
     res.status(500).send("Internal Server Error.");
   }
-}
-);
+});
 
 // Edit Entry Form
-router.get("/edit-entry/:id", checkAuth, async (req,res) => {
+router.get("/edit-entry/:id", checkAuth, async ({ session: { isLoggedIn } }, res) => {
   try {
-    await controllers.user.editForm (req,res);
-
-    if (req.session.isLoggedIn) {
-      res.render("editForm", {isLoggedIn: req.session.isLoggedIn});
-      return; 
+    await controllers.user.editForm({ session: { isLoggedIn } }, res);
+    if (isLoggedIn) {
+      res.render("editForm", { isLoggedIn });
+      return;
     }
-
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error.");
   }
-}
-);
+});
 
 // Edit Entry Post
 
-router.post("/edit-entry/:id", checkAuth, async (req,res) => {
+router.post("/edit-entry/:id", checkAuth, async ({ session: { isLoggedIn } }, res) => {
   try {
-    await controllers.user.entryEdit (req,res);
-
-    if (req.session.isLoggedIn) {
-      res.render("entryEdit", {isLoggedIn: req.session.isLoggedIn});
-      return; 
+    await controllers.user.entryEdit({ session: { isLoggedIn } }, res);
+    if (isLoggedIn) {
+      res.render("entryEdit", { isLoggedIn });
+      return;
     }
-
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error.");
   }
-}
-);
+});
+
 
 // Delete Entry
-
-router.delete("/delete-entry/:id", checkAuth, async (req,res) => {
+router.delete("/delete-entry/:id", checkAuth, async ({ session: { isLoggedIn } }, res) => {
   try {
-    await controllers.user.deleteEntry (req,res);
-
-    if (req.session.isLoggedIn) {
-      res.render("/mood-app", {isLoggedIn: req.session.isLoggedIn});
-      return; 
+    await controllers.user.deleteEntry({ session: { isLoggedIn } }, res);
+    if (isLoggedIn) {
+      res.redirect("/mood-app");
+      return;
     }
-
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error.");
   }
-}
-);
+});
 
 /* ------------------- Quynh's code ---------------------- */ 
 

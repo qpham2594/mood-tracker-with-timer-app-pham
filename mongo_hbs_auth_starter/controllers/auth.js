@@ -3,6 +3,7 @@ const { User } = require("../models");
 async function login(req, res) {
   try {
     const { username, password } = req.body;
+    console.log(req.body);
 
     if (!username || !password)
       return res.redirect("/login?error=must include username and password");

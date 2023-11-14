@@ -1,17 +1,15 @@
 const { Schema, model, models } = require("mongoose");
 
-
-
 const moodEntrySchema = new Schema({
 
-  date: {
-    type: Date,
-    required: true,
+  user: { 
+    type: Schema.Types.ObjectId,
+    ref: 'User', // referencing to the User model
+    required: false,
   },
 
-  username: {
-    type: Schema.ObjectId,
-    ref: 'User', 
+  date: {
+    type: String,
     required: true,
   },
 
@@ -26,8 +24,8 @@ const moodEntrySchema = new Schema({
   },
 });
 
-const entry = model('moodEntry', moodEntrySchema);
+const moodEntry = model('moodEntry', moodEntrySchema);
 
-module.exports = entry;
+module.exports = moodEntry;
 
 

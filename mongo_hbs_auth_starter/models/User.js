@@ -14,12 +14,12 @@ const UserSchema = new Schema(
       minLength: 5,
       maxLength: 20,
     },
-   /* moodEntries: [
+   moodEntries: [
       {
         type: Schema.Types.ObjectId, 
-        ref: 'MoodEntry', 
+        ref: 'moodEntry', 
       },
-    ],*/
+    ]
   },
   {
     methods: {

@@ -1,6 +1,6 @@
 const { User } = require("../models");
 const axios = require('axios');
-const entry = require ('../models/moodEntry');
+const moodEntry = require ('../models/moodEntry');
 const cheerio = require('cheerio');
 
 
@@ -45,7 +45,7 @@ const dailyQuote = async function get() {
 // showing all entries
 const moodTracking = async function get (req,res) {
   try {
-    const moodEntries = await entry(req,res);
+    const moodEntries = await moodEntry (req,res);
     res.render('moodTracking', {moodEntries})
   } catch (error) {
   console.error(error);
@@ -56,14 +56,14 @@ const moodTracking = async function get (req,res) {
 // form for new entry
 
 const newEntryForm = function get(req, res) {
-  console.log("Before rendering the form:", req.session.isLoggedIn);
+  console.log("Controllers/user.js: Before rendering the form:", req.session.isLoggedIn);
   
   res.render('newEntryForm', (err, html) => {
     if (err) {
       console.error(err);
       res.status(500).send("Internal Server Error.");
     } else {
-      console.log("After rendering the form:", req.session.isLoggedIn);
+      console.log("Controllers/user.js:After rendering the form:", req.session.isLoggedIn);
     }
   });
 };
@@ -73,17 +73,26 @@ const newEntryForm = function get(req, res) {
 const createNewEntry = async function post(req, res) {
 
   try {
-    const addingEntry = new entry({
-      username: req.body.ObjectId,
-      date: req.body.date,
-      mood: req.body.mood,
-      description: req.body.description,
-    });
-    
-    await addingEntry.save();
+    console.log("Controllers/user.js:Before trying to post", req.session.isLoggedIn);
+    console.log("Request body:", req.body);
 
-    res.render('newEntry', { addingEntry });
+    const {date, mood, description} = req.body;
+    //const username = req.user;
+
+    const addingEntry = new moodEntry({
+      user: req.body.username,
+      date: date,
+      mood: mood,
+      description: description,
+    });
+
+    await addingEntry.save();
+   
+    const leanEntry = await moodEntry.findById(addingEntry._id).lean();
+  
+    res.render('newEntry', { addingEntry: leanEntry });
   } catch (error) {
+    console.log("Controllers/user.js: After trying to post", req.session.isLoggedIn);
     console.error(error);
     res.status(500).send('Internal Server Error');
   }
@@ -93,7 +102,7 @@ const createNewEntry = async function post(req, res) {
 
 const editForm = async function get (req,res) {
   try {
-  const moodEditForm = await entry.findById(req.params.id);
+  const moodEditForm = await moodEntry.findById(req.params.id);
   res.render('entryEdit', {moodEditForm});
 } catch (error) {
   console.error(error);
@@ -105,7 +114,7 @@ const editForm = async function get (req,res) {
 
 const entryEdit = async function post (req,res) {
   try {
-    const currentEntry = await entry.findById(req.params.id);
+    const currentEntry = await moodEntry.findById(req.params.id);
     await currentEntry.save()
     res.redirect('/mood-app');
   } catch(error) {
@@ -118,7 +127,7 @@ const entryEdit = async function post (req,res) {
 
 const deleteEntry = async (req,res) => {
   try {
-    await entry.findByIdAndRemove(req.params.id);
+    await moodEntry.findByIdAndRemove(req.params.id);
     res.redirect('/mood-app');
   } catch (error) {
     console.error(error);

@@ -12,6 +12,7 @@ async function create(req, res) {
       return res.redirect("/signup?error=must include username and password");
 
     const user = await User.create({ username, password }); // user is what will be used to get to id
+    console.log(user);
 
     if (!user) return res.redirect("/signup?error=error creating new user");
 
@@ -73,7 +74,7 @@ const createNewEntry = async function post(req, res) {
 
   try {
     const addingEntry = new entry({
-      user: req.body.ObjectId,
+      username: req.body.ObjectId,
       date: req.body.date,
       mood: req.body.mood,
       description: req.body.description,
@@ -105,7 +106,6 @@ const editForm = async function get (req,res) {
 const entryEdit = async function post (req,res) {
   try {
     const currentEntry = await entry.findById(req.params.id);
-   // currentEntry.userid = req.userid;
     await currentEntry.save()
     res.redirect('/mood-app');
   } catch(error) {

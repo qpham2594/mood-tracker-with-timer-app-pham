@@ -1,6 +1,5 @@
 const { Schema, model, models } = require("mongoose");
 const bcrypt = require("bcrypt");
-const MoodEntry = require('./moodEntry'); // Adjust the path to moodEntry.js
 
 const UserSchema = new Schema(
   {
@@ -15,12 +14,12 @@ const UserSchema = new Schema(
       minLength: 5,
       maxLength: 20,
     },
-    moodEntries: [
+   /* moodEntries: [
       {
         type: Schema.Types.ObjectId, 
         ref: 'MoodEntry', 
       },
-    ],
+    ],*/
   },
   {
     methods: {

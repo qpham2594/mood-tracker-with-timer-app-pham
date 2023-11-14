@@ -60,7 +60,6 @@ router.get("/mood-app", checkAuth, async (req, res) => {
 // New Entry Form 
 router.get("/new-entry-form", checkAuth, async (req,res) => {
   try {
-    console.log(req.session);
     await controllers.user.newEntryForm (req,res);
 
     if (req.session.isLoggedIn) {
@@ -80,7 +79,6 @@ router.post("/new-entry-post", checkAuth, async (req,res) => {
     await controllers.user.createNewEntry (req,res);
     console.log("Before trying to post", req.session.isLoggedIn);
   
-
     if (req.session.isLoggedIn) {
       res.render("newEntry", {isLoggedIn: req.session.isLoggedIn});
       return; 

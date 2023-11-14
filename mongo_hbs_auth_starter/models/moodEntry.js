@@ -9,8 +9,8 @@ const moodEntrySchema = new Schema({
     required: true,
   },
 
-  userId: {
-    type: Schema.Types.ObjectId,
+  username: {
+    type: Schema.ObjectId,
     ref: 'User', 
     required: true,
   },
@@ -26,6 +26,8 @@ const moodEntrySchema = new Schema({
   },
 });
 
-module.exports = models.moodEntry || model("MoodEntry", moodEntrySchema);
+const entry = model('moodEntry', moodEntrySchema);
+
+module.exports = entry;
 
 

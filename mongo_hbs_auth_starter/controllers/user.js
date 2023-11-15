@@ -100,8 +100,9 @@ const createNewEntry = async function post(req, res) {
 // edit form
 const editForm = async function get (id) {
   try {
+    console.log(id);
     const moodEditForm = await moodEntry.findById(id);
-    console.log("Route error: ", moodEditForm);
+    console.log(moodEditForm);
     return moodEditForm;
     
   } catch (error) {
@@ -111,12 +112,20 @@ const editForm = async function get (id) {
 };
 
 // edited entry
-const entryEdit = async function post (id) {
+const entryEdit = async function post (req,res) {
   try {
-   // const {id} = req.params;
-    const entryUpdate = await moodEntry.findByIdAndUpdate(id, req.body, {new:true}).lean();
-    console.log(entryUpdate, "route editted entry")
-    return entryUpdate;
+    const id = req.params.id;
+    console.log("id is here:", id);
+    const entryUpdate = await moodEntry.findByIdAndUpdate(
+      id,
+      {date, mood, description}, 
+      {new:true})
+    await entryUpdate.save();
+    console.log(entryUpdate);
+
+    const finalEdit = entryUpdate.toObject();
+    console.log(finalEdit);
+    return finalEdit;
   } catch(error) {
     console.error(error);
     res.status(500).send('Internal Server Error');

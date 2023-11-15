@@ -2,7 +2,6 @@
 <main>
  <h1> All Entries </h1>
 
-
   {{#each moodEntries}}
      <div class="entry">
    
@@ -10,19 +9,14 @@
     <p>Mood: {{this.mood}}</p>
     <p>Description: {{this.description}}</p>
 
-   
     <form action="/edit-entry/{{this._id}}" method="GET">
       <button type="submit">Edit</button>
     </form>
-
-   
-   
+  
      <a href="/delete-entry/{{this._id}}"> <button class="delete-button"> Delete </button> </a> 
     
   </div>
   {{/each}}
-
-
 </main>
 
 <script>
@@ -36,10 +30,10 @@ document.querySelectorAll('.delete-button').forEach(button => {
         const remove = await fetch(button.getAttribute('href'), {
           method: 'DELETE'
         });
-        if (remove.ok) {
+        if (remove) {
           console.log("Deleted entry.");
         } else {
-          console.error("Delete not done.");
+          console.error("Deletion not done.");
         }
       } catch (error) {
         console.error("Error with entry delete", error);

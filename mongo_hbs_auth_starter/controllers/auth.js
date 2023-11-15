@@ -18,9 +18,6 @@ async function login(req, res) {
 
     if (!passwordMatches)
       return res.redirect("/login?error=username or password is incorrect");
-
-//added for tracker app
-  // req.session.userId = user.username;
     
     req.session.isLoggedIn = true;
     req.session.save(() => res.redirect("/"));

@@ -1,0 +1,13 @@
+{{> header}}
+<main>
+ <h1> All Entries </h1>
+
+
+  {{#each moodEntries}}
+    <h2>{{this.date}}</h2>
+    <p>{{this.mood}}</p>
+    <p>{{this.description}}</p>
+  {{/each}}
+
+
+</main>

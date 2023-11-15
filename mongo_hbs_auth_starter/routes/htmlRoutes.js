@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const controllers = require("../controllers");
 const checkAuth = require("../middleware/auth");
+const moodEntry = require("../models/moodEntry");
 
 
 router.get("/", ({ session: { isLoggedIn } }, res) => {
@@ -39,12 +40,15 @@ router.get("/mood-app", checkAuth, async ({ session: { isLoggedIn } }, res) => {
 });
 
 // Mood Tracker Homepage
-router.get("/mood-app", checkAuth, async ({ session: { isLoggedIn } }, res) => {
+
+router.get("/all-entries", checkAuth, async ({ session: { isLoggedIn } }, res) => {
   try {
     if (isLoggedIn) {
-      const moodEntries = await controllers.user.moodTracking(req, res);
-      res.render("moodTracking", { isLoggedIn, moodEntries });
-      return;
+      const moodEntries = await controllers.user.moodTracking({ session: { isLoggedIn } }, res);
+      res.render("allEntries", { isLoggedIn, moodEntries });
+      console.log(moodEntries);
+    } else {
+      res.redirect('/mood-app');
     }
   } catch (error) {
     console.error(error);
@@ -56,7 +60,7 @@ router.get("/mood-app", checkAuth, async ({ session: { isLoggedIn } }, res) => {
 router.get("/new-entry-form", checkAuth, async ({ session: { isLoggedIn } }, res) => {
   try {
     if (isLoggedIn) {
-      console.log("Routes/html.js: Before rendering the form:", isLoggedIn);
+      console.log(" Still logged in ", isLoggedIn);
       const newForm = await controllers.user.newEntryForm({ session: { isLoggedIn } }, res);
       res.render("newEntryForm", { isLoggedIn, newForm });
       return;
@@ -73,9 +77,9 @@ router.post("/new-entry-post", checkAuth, async ({ session: { isLoggedIn }, body
   try {
     if (isLoggedIn) {
       // Because of isLoggedIn implemented in checkAuth, we have access directly to body
-      await controllers.user.createNewEntry({ session: { isLoggedIn }, body }, res);
-      res.render("newEntry", { isLoggedIn });
-      return;
+    const newEntryPost = await controllers.user.createNewEntry({ session: { isLoggedIn }, body }, res);
+    console.log(newEntryPost);
+    res.render("newEntry", { isLoggedIn, newEntryPost });
     }
   } catch (error) {
     console.error(error);

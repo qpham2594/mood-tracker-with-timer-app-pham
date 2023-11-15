@@ -45,12 +45,13 @@ const dailyQuote = async function get() {
 const moodTracking = async function get (req,res) {
   try {
     const moodEntries = await moodEntry (req,res);
-    res.render('moodTracking', {moodEntries})
+   res.render('allEntries', {moodEntries})
   } catch (error) {
   console.error(error);
   res.status(500).send('Internal Server Error');
   }
 };
+console.log("Mood Tracking failure:",moodTracking);
 
 // form for new entry
 
@@ -76,20 +77,21 @@ const createNewEntry = async function post(req, res) {
     console.log("Request body:", req.body);
 
     const {date, mood, description} = req.body;
-    //const username = req.user;
+    const user = req.body.username;
 
     const addingEntry = new moodEntry({
-      user: req.body.username,
+      user: user,
       date: date,
       mood: mood,
       description: description,
     });
 
     await addingEntry.save();
+    console.log("Entry saved:", addingEntry);
    
     const leanEntry = await moodEntry.findById(addingEntry._id).lean();
-  
-    res.render('newEntry', { addingEntry: leanEntry });
+    return leanEntry;
+
   } catch (error) {
     console.log("Controllers/user.js: After trying to post", req.session.isLoggedIn);
     console.error(error);

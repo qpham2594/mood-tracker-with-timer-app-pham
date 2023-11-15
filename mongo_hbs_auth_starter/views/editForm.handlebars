@@ -1,1 +1,26 @@
 {{> header}}
+<main>
+<form action="/update-entry/{{entryUpdate._id}}" method="POST">
+
+    <div>
+        <label for="date"> Date: </label>
+        <input type="date" id="date" name="date" value="{{entryUpdate.date}}">
+    </div>
+    
+    <div>
+        <label for="mood"> Mood: </label>
+        <input type="text" id="mood" name="mood" value="{{entryUpdate.mood}}">
+    </div>
+    
+    <div>
+        <label for="description"> Description: </label>
+        <textarea id="description" name="description">{{entryUpdate.description}}</textarea>
+    </div>
+
+     <div>
+        <button type="submit"> Update entry </button>
+    </div>
+    
+</form>
+
+</main>

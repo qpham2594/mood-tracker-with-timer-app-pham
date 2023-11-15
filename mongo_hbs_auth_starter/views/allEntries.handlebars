@@ -4,10 +4,48 @@
 
 
   {{#each moodEntries}}
-    <h2>{{this.date}}</h2>
-    <p>{{this.mood}}</p>
-    <p>{{this.description}}</p>
+     <div class="entry">
+   
+    <p>Date: {{this.date}}</p>
+    <p>Mood: {{this.mood}}</p>
+    <p>Description: {{this.description}}</p>
+
+   
+    <form action="/edit-entry/{{this._id}}" method="GET">
+      <button type="submit">Edit</button>
+    </form>
+
+   
+   
+     <a href="/delete-entry/{{this._id}}"> <button class="delete-button"> Delete </button> </a> 
+    
+  </div>
   {{/each}}
 
 
 </main>
+
+<script>
+
+document.querySelectorAll('.delete-button').forEach(button => {
+  button.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const confirmation = confirm("Are you sure you want to delete the entry?");
+    if (confirmation) {
+      try {
+        const remove = await fetch(button.getAttribute('href'), {
+          method: 'DELETE'
+        });
+        if (remove.ok) {
+          console.log("Deleted entry.");
+        } else {
+          console.error("Delete not done.");
+        }
+      } catch (error) {
+        console.error("Error with entry delete", error);
+      }
+    }
+  });
+});
+
+</script>

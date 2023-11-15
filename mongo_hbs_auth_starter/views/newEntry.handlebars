@@ -1,12 +1,17 @@
 {{> header}}
 
 <main>
+  <h1> {{newEntryPost.date}} </h1>
+  <h2> {{newEntryPost.mood}} </h2>
+  <p> {{newEntryPost.description}}</p>
 
-    <h1> {{newEntryPost.date}} </h1>
+  <button>
+    <a href="/all-entries"> View all entries </a>
+  </button>
 
-    <h2> {{newEntryPost.mood}} </h2>
-    
-    <p> {{newEntryPost.description}}</p>
-
+  <button>
+    <a href="/edit-entry/{{newEntryPost._id}}"> Edit this entry </a>
+  </button>
 </main>
+
 

@@ -44,21 +44,19 @@ const dailyQuote = async function get() {
 // showing all entries
 const moodTracking = async function get (req,res) {
   try {
-    const moodEntries = await moodEntry (req,res);
-   res.render('allEntries', {moodEntries})
+    const moodEntries = await moodEntry.find().lean();  
+    return moodEntries;
   } catch (error) {
   console.error(error);
   res.status(500).send('Internal Server Error');
   }
 };
-console.log("Mood Tracking failure:",moodTracking);
 
 // form for new entry
 
 const newEntryForm = function get(req, res) {
-  console.log("Controllers/user.js: Before rendering the form:", req.session.isLoggedIn);
   
-  res.render('newEntryForm', (err, html) => {
+  res.render('newEntryForm', (err) => {
     if (err) {
       console.error(err);
       res.status(500).send("Internal Server Error.");
@@ -71,12 +69,9 @@ const newEntryForm = function get(req, res) {
 // adding new entry
 
 const createNewEntry = async function post(req, res) {
-
   try {
-    console.log("Controllers/user.js:Before trying to post", req.session.isLoggedIn);
-    console.log("Request body:", req.body);
-
-    const {date, mood, description} = req.body;
+    const { date, mood, description } = req.body;
+   
     const user = req.body.username;
 
     const addingEntry = new moodEntry({
@@ -87,49 +82,54 @@ const createNewEntry = async function post(req, res) {
     });
 
     await addingEntry.save();
-    console.log("Entry saved:", addingEntry);
-   
-    const leanEntry = await moodEntry.findById(addingEntry._id).lean();
-    return leanEntry;
+    //const moodEntries = await moodEntry.find() 
 
+    // lean() is used directly in queries to get plain JS objects directly from database
+    // toObject() is for existing Mongoose document and concert it to plain JS object, useful if needs to do other things
+        // to the document before sending it elsewhere
+
+    const plainData = addingEntry.toObject(); // Convert to a plain JavaScript object
+    return plainData;
   } catch (error) {
-    console.log("Controllers/user.js: After trying to post", req.session.isLoggedIn);
     console.error(error);
     res.status(500).send('Internal Server Error');
   }
 };
 
-// edit form
 
-const editForm = async function get (req,res) {
+// edit form
+const editForm = async function get (id) {
   try {
-  const moodEditForm = await moodEntry.findById(req.params.id);
-  res.render('entryEdit', {moodEditForm});
-} catch (error) {
-  console.error(error);
-  res.status(500).send('Internal Server Error')
-}
+    const moodEditForm = await moodEntry.findById(id);
+    console.log("Route error: ", moodEditForm);
+    return moodEditForm;
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
 };
 
-// edit entry
-
-const entryEdit = async function post (req,res) {
+// edited entry
+const entryEdit = async function post (id) {
   try {
-    const currentEntry = await moodEntry.findById(req.params.id);
-    await currentEntry.save()
-    res.redirect('/mood-app');
+   // const {id} = req.params;
+    const entryUpdate = await moodEntry.findByIdAndUpdate(id, req.body, {new:true}).lean();
+    console.log(entryUpdate, "route editted entry")
+    return entryUpdate;
   } catch(error) {
     console.error(error);
-    res.status(500).send('Internal Server Error')
+    res.status(500).send('Internal Server Error');
   }
 };
 
 // delete entry
 
-const deleteEntry = async (req,res) => {
+const deleteEntry = async function deleteEntry(req,res) {
   try {
-    await moodEntry.findByIdAndRemove(req.params.id);
-    res.redirect('/mood-app');
+    const postDelete = await moodEntry.findByIdAndDelete(req.params.id);
+    console.log(postDelete);
+    return postDelete;
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');

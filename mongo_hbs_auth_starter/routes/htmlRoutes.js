@@ -26,6 +26,34 @@ router.get("/private", checkAuth, ({ session: { isLoggedIn } }, res) => {
 
 /* ------------------- Quynh's code ---------------------- */
 
+// About page
+
+router.get('/about', checkAuth, async ({ session: { isLoggedIn } }, res) => {
+  try {
+    if (isLoggedIn) {
+      res.render('about', {isLoggedIn});
+      return;
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// Pomodoro Timer
+
+router.get('/pomodoro-timer', checkAuth, async ({ session: { isLoggedIn } }, res) => {
+  try {
+    if (isLoggedIn) {
+      res.render('pomodoroTimer', {isLoggedIn});
+      return;
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 // Mood Tracker Daily Quote
 router.get("/mood-app", checkAuth, async ({ session: { isLoggedIn } }, res) => {
   try {
@@ -135,3 +163,5 @@ router.get("/delete-entry/:id", checkAuth, async ({ params: { id }, session: { i
 /* ------------------- Quynh's code ---------------------- */ 
 
 module.exports = router;
+
+//Cannot POST /update-entry/

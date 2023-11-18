@@ -42,14 +42,4 @@ app.use("/api", apiRoutes);
 app.use("/", htmlRoutes);
 
 
-// Route for pomodoro-timer
-app.get('/pomodoro-timer', (req, res) => {
-  res.render('pomodoroTimer');});
-
-// Route for About page
-app.get('/about', (req,res) => {
-  res.render('about')});
-
-
-
 module.exports = app;

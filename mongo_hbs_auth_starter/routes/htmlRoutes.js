@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const controllers = require("../controllers");
+const { deleteEntry, editForm } = require("../controllers/user");
 const checkAuth = require("../middleware/auth");
 const moodEntry = require("../models/moodEntry");
 
@@ -85,16 +86,14 @@ router.post("/new-entry-post", checkAuth, async ({ session: { isLoggedIn }, body
 });
 
 // Edit Entry Form
-router.get("/edit-entry/:id", checkAuth, async (req, res) => {
+router.get("/edit-entry/:id", checkAuth, async ({ params: { id }, session: { isLoggedIn } }, res) => {
   try {
-    //const { id } = req.params;
-    const formEdit = await controllers.user.editForm(req.params.id, req.body); // Pass only the id
-    console.log(formEdit);
 
-    if (formEdit) {
-      res.render("editForm", { isLoggedIn: req.session.isLoggedIn, formEdit });
-    } else {
-      res.status(404).send("Entry not found");
+    if (isLoggedIn) {
+      const formEdit = await controllers.user.editForm({params: {id}}); // Pass only the id
+      console.log("router handling success:", formEdit);  
+      res.render("editForm", { isLoggedIn, formEdit }); 
+      return formEdit;
     }
   } catch (error) {
     console.error(error);
@@ -104,13 +103,13 @@ router.get("/edit-entry/:id", checkAuth, async (req, res) => {
 
 
 // Edited Entry Post
-router.post("/update-entry/:id", checkAuth, async (req, res) => {
+router.post("/update-entry/:id", checkAuth, async ({ params: { id }, session: { isLoggedIn } }, res) => {
   try {
-    //const {id} = req.params;
-    const editedPost = await controllers.user.entryEdit(req.params.id, req.body);
-    console.log(editedPost, "edited post handling")
-    if (editedPost) {
-      res.render("entryEdit", { isLoggedIn: req.session.isLoggedIn, editedPost });
+    if (isLoggedIn){
+      const editedPost = await controllers.user.entryEdit(req);
+      console.log(editedPost, "edited post handling")
+      res.render("entryEdit", { isLoggedIn, editedPost });
+      return editedPost;
     }
   } catch (error) {
     console.error(error);
@@ -118,15 +117,13 @@ router.post("/update-entry/:id", checkAuth, async (req, res) => {
   }
 });
 
-
-
 // Delete Entry
-router.delete("/delete-entry/:id", checkAuth, async ({ params: { id }, session: { isLoggedIn } }, res) => {
+router.get("/delete-entry/:id", checkAuth, async ({ params: { id }, session: { isLoggedIn } }, res) => {
   try {
     if (isLoggedIn) {
-      const removePost = await deleteEntry(id);
-      console.log(removePost);
-      res.redirect("/allEntries");
+      const removePost = await deleteEntry({params: {id}});
+      console.log("Successfully removed post!", removePost);
+      res.redirect("/all-entries");
     }
   } catch (error) {
     console.error(error);

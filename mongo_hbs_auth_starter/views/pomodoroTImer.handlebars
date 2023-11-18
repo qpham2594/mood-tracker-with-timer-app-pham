@@ -1,0 +1,75 @@
+{{> header}}
+
+<main>
+
+ <div id="timer">
+    <h1 id="time">25:00</h1>
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+  </div>
+
+</main>
+
+
+<script>
+
+    let timer;
+    let minutes = 25;
+    let seconds = 0;
+    let isRunning = false;
+    let workSessions = 0;
+
+    function startTimer() {
+    timer = setInterval(() => {
+        if (seconds === 0) {
+        if (minutes === 0) {
+            clearInterval(timer);
+            workSessions++;
+            if (workSessions % 4 === 0) { // % to make sure it's every # that's divisible by 4 instead of stopping completely after 4
+            // 30-minute break after every 4 sessions
+            minutes = 30;
+            seconds = 0;
+            displayTime();
+            alert('TAKE A 30-MINUTE BREAK');
+            } else {
+            // 25-minute work session
+            minutes = 25;
+            seconds = 0;
+            displayTime();
+            alert('Pomodoro session complete! Take a 5 minute break!.');
+            }
+            startTimer();
+        } else {
+            minutes -= 1;
+            seconds = 59;
+        }
+        } else {
+        seconds -= 1;
+        }
+
+        displayTime();
+    }, 1000);
+    }
+
+    function stopTimer() {
+    clearInterval(timer);
+    isRunning = false;
+    }
+
+    function displayTime() {
+    const timeDisplay = document.getElementById('time');
+    timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    document.getElementById('start').addEventListener('click', () => {
+    if (!isRunning) {
+        isRunning = true;
+        startTimer();
+    }
+    });
+
+    document.getElementById('stop').addEventListener('click', () => {
+    stopTimer();
+    });
+
+</script>

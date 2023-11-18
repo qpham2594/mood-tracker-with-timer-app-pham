@@ -19,27 +19,3 @@
   {{/each}}
 </main>
 
-<script>
-
-document.querySelectorAll('.delete-button').forEach(button => {
-  button.addEventListener('click', async (event) => {
-    event.preventDefault();
-    const confirmation = confirm("Are you sure you want to delete the entry?");
-    if (confirmation) {
-      try {
-        const remove = await fetch(button.getAttribute('href'), {
-          method: 'DELETE'
-        });
-        if (remove) {
-          console.log("Deleted entry.");
-        } else {
-          console.error("Deletion not done.");
-        }
-      } catch (error) {
-        console.error("Error with entry delete", error);
-      }
-    }
-  });
-});
-
-</script>

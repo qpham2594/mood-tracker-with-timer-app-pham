@@ -98,47 +98,43 @@ const createNewEntry = async function post(req, res) {
 
 
 // edit form
-const editForm = async function get (id) {
+
+const editForm = async function get(req, res) {
   try {
-    console.log(id);
-    const moodEditForm = await moodEntry.findById(id);
-    console.log(moodEditForm);
+    const moodEditForm = await moodEntry.findById(req.params.id);
     return moodEditForm;
-    
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error.');
+  }
+};
+
+// edited entry
+const entryEdit = async function post(req, res) {
+  try {
+    const id = req.params.id;
+    const { date, mood, description } = req.body;
+
+    const entryUpdate = await moodEntry.findByIdAndUpdate(
+      id,
+      { $set: { date, mood, description } },
+      { new: true }
+    );
+    console.log("Updated entry:", entryUpdate);
+    return entryUpdate;
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
   }
 };
 
-// edited entry
-const entryEdit = async function post (req,res) {
-  try {
-    const id = req.params.id;
-    console.log("id is here:", id);
-    const entryUpdate = await moodEntry.findByIdAndUpdate(
-      id,
-      {date, mood, description}, 
-      {new:true})
-    await entryUpdate.save();
-    console.log(entryUpdate);
-
-    const finalEdit = entryUpdate.toObject();
-    console.log(finalEdit);
-    return finalEdit;
-  } catch(error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
-  }
-};
 
 // delete entry
 
-const deleteEntry = async function deleteEntry(req,res) {
+const deleteEntry = async function postDelete(req, res) {
   try {
-    const postDelete = await moodEntry.findByIdAndDelete(req.params.id);
-    console.log(postDelete);
-    return postDelete;
+    const deletedEntry = await moodEntry.deleteOne({ _id: req.params.id });
+    console.log("Post sucessfully delted", deletedEntry);
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');

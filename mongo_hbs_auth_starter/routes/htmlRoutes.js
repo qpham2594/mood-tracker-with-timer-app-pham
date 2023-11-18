@@ -114,11 +114,11 @@ router.post("/new-entry-post", checkAuth, async ({ session: { isLoggedIn }, body
 });
 
 // Edit Entry Form
-router.get("/edit-entry/:id", checkAuth, async ({ params: { id }, session: { isLoggedIn } }, res) => {
+router.get("/edit-entry/:id", checkAuth, async ({ params: { id }, session: { isLoggedIn }, body }, res) => {
   try {
 
     if (isLoggedIn) {
-      const formEdit = await controllers.user.editForm({params: {id}}); // Pass only the id
+      const formEdit = await controllers.user.editForm({params: {id}, body});
       console.log("router handling success:", formEdit);  
       res.render("editForm", { isLoggedIn, formEdit }); 
       return formEdit;
@@ -131,10 +131,10 @@ router.get("/edit-entry/:id", checkAuth, async ({ params: { id }, session: { isL
 
 
 // Edited Entry Post
-router.post("/update-entry/:id", checkAuth, async ({ params: { id }, session: { isLoggedIn } }, res) => {
+router.post("/update-entry/:id", checkAuth, async ({ params: { id }, session: { isLoggedIn }, body }, res) => {
   try {
     if (isLoggedIn){
-      const editedPost = await controllers.user.entryEdit(req);
+      const editedPost = await controllers.user.entryEdit({params:{id}, body});
       console.log(editedPost, "edited post handling")
       res.render("entryEdit", { isLoggedIn, editedPost });
       return editedPost;

@@ -55,7 +55,6 @@ const moodTracking = async function get (req,res) {
 // form for new entry
 
 const newEntryForm = function get(req, res) {
-  
   res.render('newEntryForm', (err) => {
     if (err) {
       console.error(err);
@@ -120,7 +119,6 @@ const entryEdit = async function post(req, res) {
       { $set: { date, mood, description } },
       { new: true }
     );
-    console.log("Updated entry:", entryUpdate);
     return entryUpdate;
   } catch (error) {
     console.error(error);
@@ -128,13 +126,11 @@ const entryEdit = async function post(req, res) {
   }
 };
 
-
 // delete entry
 
 const deleteEntry = async function postDelete(req, res) {
   try {
     const deletedEntry = await moodEntry.deleteOne({ _id: req.params.id });
-    console.log("Post sucessfully delted", deletedEntry);
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
@@ -148,7 +144,7 @@ module.exports = {
   moodTracking,
   newEntryForm,
   createNewEntry,
-  editForm,
+  editForm, 
   entryEdit,
   deleteEntry
  };

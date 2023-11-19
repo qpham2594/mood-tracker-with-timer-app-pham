@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const controllers = require("../controllers");
-const { deleteEntry, editForm } = require("../controllers/user");
+const { deleteEntry, editForm, updatedEntryPost } = require("../controllers/user");
 const checkAuth = require("../middleware/auth");
 const moodEntry = require("../models/moodEntry");
 
@@ -102,9 +102,7 @@ router.get("/new-entry-form", checkAuth, async ({ session: { isLoggedIn } }, res
 router.post("/new-entry-post", checkAuth, async ({ session: { isLoggedIn }, body }, res) => {
   try {
     if (isLoggedIn) {
-      // Because of isLoggedIn implemented in checkAuth, we have access directly to body
     const newEntryPost = await controllers.user.createNewEntry({ session: { isLoggedIn }, body }, res);
-    console.log(newEntryPost);
     res.render("newEntry", { isLoggedIn, newEntryPost });
     }
   } catch (error) {
@@ -114,13 +112,13 @@ router.post("/new-entry-post", checkAuth, async ({ session: { isLoggedIn }, body
 });
 
 // Edit Entry Form
+
 router.get("/edit-entry/:id", checkAuth, async ({ params: { id }, session: { isLoggedIn }, body }, res) => {
   try {
-
     if (isLoggedIn) {
       const formEdit = await controllers.user.editForm({params: {id}, body});
-      console.log("router handling success:", formEdit);  
-      res.render("editForm", { isLoggedIn, formEdit }); 
+      const formEditObj = formEdit.toObject();
+      res.render("editForm", { isLoggedIn, formEdit: formEditObj, id }); 
       return formEdit;
     }
   } catch (error) {
@@ -135,8 +133,7 @@ router.post("/update-entry/:id", checkAuth, async ({ params: { id }, session: { 
   try {
     if (isLoggedIn){
       const editedPost = await controllers.user.entryEdit({params:{id}, body});
-      console.log(editedPost, "edited post handling")
-      res.render("entryEdit", { isLoggedIn, editedPost });
+      res.redirect("/all-entries");
       return editedPost;
     }
   } catch (error) {
@@ -150,7 +147,6 @@ router.get("/delete-entry/:id", checkAuth, async ({ params: { id }, session: { i
   try {
     if (isLoggedIn) {
       const removePost = await deleteEntry({params: {id}});
-      console.log("Successfully removed post!", removePost);
       res.redirect("/all-entries");
     }
   } catch (error) {
@@ -164,4 +160,3 @@ router.get("/delete-entry/:id", checkAuth, async ({ params: { id }, session: { i
 
 module.exports = router;
 
-//Cannot POST /update-entry/

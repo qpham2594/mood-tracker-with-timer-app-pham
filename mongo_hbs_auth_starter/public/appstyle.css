@@ -18,7 +18,7 @@
     line-height: 1.5;
     padding: 0;
     margin: 0;
-    font-family: helvetica;
+    font-family:Georgia, 'Times New Roman', Times, serif;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -94,7 +94,7 @@
     margin: var(--space);
   }
   header .site-logo {
-    font-size: calc(var(--font-size) * 1.5);
+    font: size 25px;;
     margin: var(--space);
     margin-right: auto;
   }

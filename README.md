@@ -1,4 +1,4 @@
-# mood-tracker-with-timer-app-pham
+# mood-tracker-with-timer-app
 
 Background:
 

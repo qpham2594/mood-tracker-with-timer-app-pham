@@ -1,6 +1,6 @@
 # mood-tracker-with-timer-app
 
-Background:
+Background for the App:
 
 For this project, I wanted to create something that I feel would be useful for those with ADHD, like myself. Being an adult with a late diagnosis, it can be challenging to grasp that almost everything I have done, experience, and feel in my life stem from ADHD.
 Some of the things I struggle with my whole life is understanding my own feelings and why I feel a certain way. I used to think that I was emotional and others would think I am dramatic. But, recently, I have learned that people like myself experience emotions 

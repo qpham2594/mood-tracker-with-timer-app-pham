@@ -20,56 +20,63 @@
     let workSessions = 0;
 
     function startTimer() {
-    timer = setInterval(() => {
-        if (seconds === 0) {
-        if (minutes === 0) {
-            clearInterval(timer);
-            workSessions++;
-            if (workSessions % 4 === 0) { // % to make sure it's every # that's divisible by 4 instead of stopping completely after 4
-            // 30-minute break after every 4 sessions
-            minutes = 30;
-            seconds = 0;
-            displayTime();
-            alert('TAKE A 30-MINUTE BREAK');
+        // set the internal for the timer so that if time = 0, then the timer will be cleared while increasing that work session by 1 until multiple? divisible? (not sure if that's the right word) by 4
+        // if minute -1 and it's not at 0, the seconds is set for 59 and decrease by 1, and if the second is not at 0, then it will decrease by 1 and display that time
+        timer = setInterval(() => {
+            if (seconds === 0) {
+            if (minutes === 0) {
+                clearInterval(timer);
+                workSessions++;
+                if (workSessions % 4 === 0) { // % to make sure it's every # that's divisible by 4 instead of stopping completely after 4
+                // if the session reach 0 after each session that's divisible by 4, then there will be an alert to take a 30 minute break
+                // essentially, it's a 30 minute break reminder every 4 sessions
+
+                // 30-minute break after every 4 sessions
+                minutes = 30;
+                seconds = 0;
+                displayTime();
+                alert('TAKE A 30-MINUTE BREAK');
+                } else {
+                // if the session is not divisible by 4, then it's a 5 minute break alert
+                // 25-minute work session
+                minutes = 25;
+                seconds = 0;
+                displayTime();
+                alert('Pomodoro session complete! Take a 5 minute break!.');
+                }
+                startTimer();
             } else {
-            // 25-minute work session
-            minutes = 25;
-            seconds = 0;
-            displayTime();
-            alert('Pomodoro session complete! Take a 5 minute break!.');
+                minutes -= 1; // same as minutes = minutes - 1, but neater looking
+                seconds = 59;
             }
+            } else {
+            seconds -= 1; // same as seconds = seconds - 1, but neater looking
+            }
+
+            displayTime();
+        }, 1000);
+        }
+
+        function stopTimer() {
+        clearInterval(timer);
+        isRunning = false; //boolean to show timer stops, otherwise, timer is active
+        }
+
+        // toString() to convert minutes and seconds to strings, padStart() will make sure that if it's one digit, a 0 will be add in front to reach 2 digits
+        function displayTime() {
+        const timeDisplay = document.getElementById('time');
+        timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        document.getElementById('start').addEventListener('click', () => {
+        if (!isRunning) {
+            isRunning = true;
             startTimer();
-        } else {
-            minutes -= 1;
-            seconds = 59;
         }
-        } else {
-        seconds -= 1;
-        }
+        });
 
-        displayTime();
-    }, 1000);
-    }
-
-    function stopTimer() {
-    clearInterval(timer);
-    isRunning = false;
-    }
-
-    function displayTime() {
-    const timeDisplay = document.getElementById('time');
-    timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    }
-
-    document.getElementById('start').addEventListener('click', () => {
-    if (!isRunning) {
-        isRunning = true;
-        startTimer();
-    }
-    });
-
-    document.getElementById('stop').addEventListener('click', () => {
-    stopTimer();
+        document.getElementById('stop').addEventListener('click', () => {
+        stopTimer();
     });
 
 </script>

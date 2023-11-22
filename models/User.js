@@ -14,6 +14,7 @@ const UserSchema = new Schema(
       minLength: 5,
       maxLength: 20,
     },
+    // reference mood entry schema in user schema to associate the user info with the mood entry info
    moodEntries: [
       {
         type: Schema.Types.ObjectId, 

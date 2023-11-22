@@ -27,6 +27,7 @@ router.get("/private", checkAuth, ({ session: { isLoggedIn } }, res) => {
 /* ------------------- Quynh's code ---------------------- */
 
 // About page
+// route to take user to /about and check for authentication and make sure session is active
 
 router.get('/about', checkAuth, async ({ session: { isLoggedIn } }, res) => {
   try {
@@ -41,6 +42,8 @@ router.get('/about', checkAuth, async ({ session: { isLoggedIn } }, res) => {
 });
 
 // Pomodoro Timer
+// timer is set in HBS, but the route here will take user to the timer when clicking on it in the navigation bar
+// still making sure authentication is in check, and making sure session is active for that user
 
 router.get('/pomodoro-timer', checkAuth, async ({ session: { isLoggedIn } }, res) => {
   try {
@@ -55,6 +58,7 @@ router.get('/pomodoro-timer', checkAuth, async ({ session: { isLoggedIn } }, res
 });
 
 // Mood Tracker Daily Quote
+// rendering the dailyquote from controllers.user.js with under the URL /mood-app
 router.get("/mood-app", checkAuth, async ({ session: { isLoggedIn } }, res) => {
   try {
     if (isLoggedIn) {
@@ -69,7 +73,7 @@ router.get("/mood-app", checkAuth, async ({ session: { isLoggedIn } }, res) => {
 });
 
 // Mood Tracker Homepage
-
+// route to get all entries  with authentication and active session
 router.get("/all-entries", checkAuth, async ({ session: { isLoggedIn } }, res) => {
   try {
     if (isLoggedIn) {
@@ -85,6 +89,7 @@ router.get("/all-entries", checkAuth, async ({ session: { isLoggedIn } }, res) =
 });
 
 // New Entry Form 
+// route to get the new entry form for user to put in information 
 router.get("/new-entry-form", checkAuth, async ({ session: { isLoggedIn } }, res) => {
   try {
     if (isLoggedIn) {
@@ -99,6 +104,8 @@ router.get("/new-entry-form", checkAuth, async ({ session: { isLoggedIn } }, res
 });
 
 // New Entry Post
+// post route handling to save and display the new entry
+// returning the body here since controllers.user.js used req.body to put in date, mood, and description info
 router.post("/new-entry-post", checkAuth, async ({ session: { isLoggedIn }, body }, res) => {
   try {
     if (isLoggedIn) {
@@ -112,7 +119,9 @@ router.post("/new-entry-post", checkAuth, async ({ session: { isLoggedIn }, body
 });
 
 // Edit Entry Form
-
+// using id in req here because we used id to track which user it is in controllers.user.js
+// also used body in req because we need it when we are editing for the update
+// toObject() to get to plain JS - noticed it didn't display without it 
 router.get("/edit-entry/:id", checkAuth, async ({ params: { id }, session: { isLoggedIn }, body }, res) => {
   try {
     if (isLoggedIn) {
@@ -129,6 +138,8 @@ router.get("/edit-entry/:id", checkAuth, async ({ params: { id }, session: { isL
 
 
 // Edited Entry Post
+// once again using id and body here because of how we defined both in controllers.user.js
+// redirecting it back to all entries page after editing
 router.post("/update-entry/:id", checkAuth, async ({ params: { id }, session: { isLoggedIn }, body }, res) => {
   try {
     if (isLoggedIn){
@@ -143,6 +154,7 @@ router.post("/update-entry/:id", checkAuth, async ({ params: { id }, session: { 
 });
 
 // Delete Entry
+// because on front-end, we can't do method of DELETE in HBS, we use get here, so that we can execute DELETE from controllers.user.js and frontend script
 router.get("/delete-entry/:id", checkAuth, async ({ params: { id }, session: { isLoggedIn } }, res) => {
   try {
     if (isLoggedIn) {

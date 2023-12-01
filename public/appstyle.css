@@ -8,11 +8,13 @@
     --secondary-light: hsl(15deg 100% 70%);
     --text-color: #e48b38;
     --space: 16px;
-    --font-size: 18px;
+    --font-size: 16px;
   }
 
   body {
-    background-color: var(--primary-dark);
+    background-image: url(app-bg.png);
+    background-repeat: repeat-y;
+    background-size: cover;
     color: var(--text-color);
     font-size: var(--font-size);
     line-height: 1.5;
@@ -87,7 +89,7 @@
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--black);
+    background-color: var(--primary-dark);
     margin-bottom: calc(var(--space) * 6);
   }
   header a {
@@ -127,9 +129,12 @@
   
   .timer {
     background-color: var(--text-color);
-    
-
   }
+
+  .homepage-button {
+    font-size: 14pt;
+  }
+
   @media screen and (max-width: 700px) {
     .site-logo {
       font-size: calc(var(--font-size) * 1.25);
@@ -141,5 +146,33 @@
     header a {
       margin: calc(var(--space) / 2);
     }
+
+    :root {
+      --space: 12px;
+      --font-size: 12px;
+      text-wrap: wrap;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      font-size: calc(var(--font-size) * 1.25);
+    }
+    h2 {
+      font-size: calc(var(--font-size) * 1);
+    }
+    h3 {
+      font-size: calc(var(--font-size) * 0.5);
+    }
+
+    .homepage-button {
+      font-size: 12pt;
+    }
+
+    body {
+      background-image: url(app-bg-phone.png);
+      background-repeat: repeat-y;
+      background-size: cover;
+    }
+
   }
   
